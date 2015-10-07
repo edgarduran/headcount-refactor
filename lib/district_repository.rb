@@ -34,6 +34,7 @@ class District
   def enrollment
     Enrollment.new(@name)
   end
+
 end
 
 class Enrollment < AllCsvFiles
@@ -50,13 +51,38 @@ class Enrollment < AllCsvFiles
   def dropout_rate_in_year(year_input)
     csv_file = DROPOUT
     parsed = send_to_parser(csv_file)
-    parsed.map { |row| [row.fetch(:timeframe).to_i, (row.fetch(:data).to_f * 1000).to_i/ 1000.0] }.to_h
-      if year == year_input.to_s && category == "All Students" && district == "ACADEMY 20"
-        line = (value.to_f * 1000).to_i / 1000.0
-        return line
-      end
-    end
+    hash = parsed.map { |row| [row.fetch(:timeframe).to_i, (row.fetch(:data).to_f * 1000).to_i/ 1000.0] }.to_h
+    hash[year_input]
   end
+
+  def dropout_rate_by_gender_in_year(year_input)
+  if year_input.to_s.length != 4
+    return nil
+  end
+  csv_file = DROPOUT
+  parsed = send_to_parser(csv_file)
+  parsed.map { |row| [row.fetch(:timeframe).to_i, (row.fetch(:data).to_f * 1000).to_i/ 1000.0] }.to_h
+  # data.each do |columns|
+  #   district  = columns[:location]
+  #   category  = columns[:category]
+  #   year      = columns[:timeframe]
+  #   stat_type = columns[:dataformat]
+  #   value     = columns[:data]
+  #   if district == "ACADEMY 20"
+  #     if year == year_input.to_s && category == "Female Students" || year == year_input.to_s && category == "Male Students"
+  #       if category == "Female Students"
+  #         category = category[0..5].downcase
+  #       elsif
+  #         category == "Male Students"
+  #         category = category [0..3].downcase
+  #       end
+  #       hash = Hash[category.to_sym, (value.to_f * 1000).to_i / 1000.0]
+  #       line = line.merge(hash)
+  #     end
+  #   end
+  # end
+  # return line
+end
 
   def graduation_rate_by_year
     csv_file = HS_GRAD_RATES
