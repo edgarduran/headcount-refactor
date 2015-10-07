@@ -1,14 +1,15 @@
 require 'csv'
 require 'pry'
+require_relative 'all_csv_files'
 
 class DistrictRepository
   def self.from_csv(path)
-    filename = File.expand_path "High school graduation rates.csv", path
-    rows = CSV.readlines(filename, headers: true, header_converters: :symbol).map(&:to_h)
+    filename  = "High school graduation rates.csv"
+    full_path = File.join(path, filename)
+    rows = CSV.readlines(full_path, headers: true, header_converters: :symbol).map(&:to_h)
 
     district_data =
     rows.group_by { |rows| rows.fetch(:location).upcase }.to_h
-
     DistrictRepository.new(district_data)
   end
 
@@ -19,6 +20,7 @@ class DistrictRepository
   def find_by_name(name)
     name = name.upcase
     District.new(name, @district_data.fetch(name))
+
   end
 end
 
@@ -29,18 +31,26 @@ class District
   end
 
   def enrollment
-    Enrollment.new(@data)
+    Enrollment.new(@name)
   end
 end
 
 class Enrollment
   attr_accessor :graduation_rate_by_year
 
-  def initialize(data)
-    @data = data
+  def initialize(name)
+    @name = name
+    binding.pry 
+  end
+
+  def send_to_parser(csv_file)
+    @parsed = Parse.new(@name, csv_file)
   end
 
   def graduation_rate_by_year
+    csv_file = HS_GRAD_RATES
+    parsed = send_to_parser(csv_file)
+    binding.pry
     @data.map { |row| [row.fetch(:timeframe).to_i, (row.fetch(:data).to_f * 1000).to_i/ 1000.0] }.to_h
   end
 
