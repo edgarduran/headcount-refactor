@@ -47,6 +47,17 @@ class Enrollment < AllCsvFiles
     @parsed = Parse.new(@name, csv_file).parse_file
   end
 
+  def dropout_rate_in_year(year_input)
+    csv_file = DROPOUT
+    parsed = send_to_parser(csv_file)
+    parsed.map { |row| [row.fetch(:timeframe).to_i, (row.fetch(:data).to_f * 1000).to_i/ 1000.0] }.to_h
+      if year == year_input.to_s && category == "All Students" && district == "ACADEMY 20"
+        line = (value.to_f * 1000).to_i / 1000.0
+        return line
+      end
+    end
+  end
+
   def graduation_rate_by_year
     csv_file = HS_GRAD_RATES
     parsed = send_to_parser(csv_file)
