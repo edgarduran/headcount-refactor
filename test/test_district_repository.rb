@@ -5,14 +5,14 @@ require 'enrollment'
 
 class TestEnrollment < Minitest::Test
 
-  def test_free_or_reduced_lunch_in_year
+  def test_graduation_rate_in_year
     path       = File.expand_path("../data", __dir__)
     repository = DistrictRepository.from_csv(path)
     district   = repository.find_by_name("ACADEMY 20")
     assert_equal 0.895, district.enrollment.graduation_rate_in_year(2010)
   end
 
-  def test_free_or_reduced_lunch_by_year
+  def test_graduation_rate_by_year
     path       = File.expand_path("../data", __dir__)
     repository = DistrictRepository.from_csv(path)
     district   = repository.find_by_name("ACADEMY 20")
