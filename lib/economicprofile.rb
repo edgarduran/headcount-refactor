@@ -9,10 +9,18 @@ class EconomicProfile < AllCsvFiles
     @parsed = Parse.new(@name, csv_file).parse_file
   end
 
+  def free_or_reduced_lunch_by_year
+    csv_file = REDUCED_LUNCH
+    parsed = send_to_parser(csv_file)
+    time = parsed.map { |row| [row.fetch(:timeframe).to_i, (row.fetch(:data).to_f * 1000).to_i/ 1000.0] }.to_h
+    binding.pry
+  end
+
   def free_or_reduced_lunch_in_year(year)
     csv_file = REDUCED_LUNCH
     parsed = send_to_parser(csv_file)
-    parsed.map { |row| [row.fetch(:timeframe).to_i, (row.fetch(:data).to_f * 1000).to_i/ 1000.0] }.to_h
+    time = parsed.map { |row| [row.fetch(:timeframe).to_i, (row.fetch(:data).to_f * 1000).to_i/ 1000.0] }.to_h
+    binding.pry
     time.fetch(year)
   end
 
