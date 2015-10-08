@@ -72,44 +72,18 @@ class Enrollment < AllCsvFiles
     if year_input.to_s.length != 4
       return nil
     end
-    data = CSV.open "#{@path}/Dropout rates by race and ethnicity.csv", headers: true, header_converters: :symbol
-    line = {}
-    hash = {}
-    data.each do |columns|
-      district  = columns[:location]
-      category  = columns[:category]
-      year      = columns[:timeframe]
-      stat_type = columns[:dataformat]
-      value     = columns[:data]
-      if district == "ACADEMY 20"
-        if category == "Asian Students" || category == "Black Students" || category == "Native Hawaiian or Other Pacific Islander" || category == "Hispanic Students" || category == "Native American Students" || category == "Two or More Races" || category == "White Students"
-          if category == "Asian Students"
-            category = category[0..4].downcase
-          elsif
-            category == "Black Students"
-            category = category[0..4].downcase
-          elsif
-            category == "Native Hawaiian or Other Pacific Islander"
-            category = "pacific_islander"
-          elsif
-            category == "Hispanic Students"
-            category = category[0..7].downcase
-          elsif
-            category == "Native American Students"
-            category = "native_american"
-          elsif
-            category == "Two or More Races"
-            category = "two_or_more"
-          elsif
-            category == "White Students"
-            category = category[0..4].downcase
-          end
-          hash = Hash[category.to_sym, (value.to_f * 1000).to_i / 1000.0]
-          line = line.merge(hash)
-        end
-      end
-    end
-    return line
+    csv_file = DROPOUT
+    parsed = send_to_parser(csv_file)
+    m_f_rows = parsed.select { |row| row if row.fetch(:location) == @name &&
+                                            row.fetch(:timeframe).to_i == year_input &&
+                                            (row.fetch(:category) == "Asian Students" ||
+                                             row.fetch(:category) == "Black Students" ||
+                                             row.fetch(:category) == "Native Hawaiian or Other Pacific Islander" ||
+                                             row.fetch(:category) == "Hispanic Students" ||
+                                             row.fetch(:category) == "Native American Students" ||
+                                             row.fetch(:category) == "Two or More Races" ||
+                                             row.fetch(:category) == "White Students")}
+    hash =  m_f_rows.map { |row| [row.fetch(:category).downcase.split[0].to_sym, (row.fetch(:data).to_f * 1000).to_i/ 1000.0] }.to_h
   end
 
 
@@ -181,7 +155,21 @@ class Enrollment < AllCsvFiles
   end
 
   def participation_by_race_or_ethnicity_in_year(year_input)
-
+    if year_input.to_s.length != 4
+      return nil
+    end
+    csv_file = ENROLL_BY_RACE
+    parsed = send_to_parser(csv_file)
+    m_f_rows = parsed.select { |row| row if row.fetch(:location) == @name &&
+                                            row.fetch(:timeframe).to_i == year_input &&
+                                            (row.fetch(:category) == "Asian Students" ||
+                                             row.fetch(:category) == "Black Students" ||
+                                             row.fetch(:category) == "Native Hawaiian or Other Pacific Islander" ||
+                                             row.fetch(:category) == "Hispanic Students" ||
+                                             row.fetch(:category) == "Native American Students" ||
+                                             row.fetch(:category) == "Two or More Races" ||
+                                             row.fetch(:category) == "White Students")}
+    hash =  m_f_rows.map { |row| [row.fetch(:category).downcase.split[0].to_sym, (row.fetch(:data).to_f * 1000).to_i/ 1000.0] }.to_h
   end
 
   def special_education_by_year

@@ -1,6 +1,6 @@
-require 'pry'                     # => true
-require 'csv'                     # => true
-require_relative 'all_csv_files'  # => true
+require 'pry'
+require 'csv'
+require_relative 'all_csv_files'
 
 class Parse
 
@@ -8,18 +8,18 @@ class Parse
     @name = name
     @file = csv_file
     @data_hash = data_hash
-  end                                           # => :initialize
+  end
 
   def parse_file
     rows = read_csv
     hash = get_a_hash(rows)
-  end                        # => :parse_file
+  end
 
   def read_csv
     path = File.expand_path("../data", __dir__)
     fullpath = File.join(path, @file)
     CSV.read(fullpath, headers: true, header_converters: :symbol)
-  end                                                              # => :read_csv
+  end
 
   # def path
   #   path = File.expand_path("../data", __dir__)
@@ -28,9 +28,9 @@ class Parse
   def get_a_hash(rows)
     big_hash = rows.map {|array| array.to_h}
     big_hash.select{|row| row.fetch(:location).upcase == @name.upcase}
-  end                                                                   # => :get_a_hash
+  end
 
 
-end                                                                                                                   # => :get_a_hash
-h = {:location=>"ACADEMY 20", :category=>"All Students", :timeframe=>"2011", :dataformat=>"Percent", :data=>"0.002"}  # => {:location=>"ACADEMY 20", :category=>"All Students", :timeframe=>"2011", :dataformat=>"Percent", :data=>"0.002"}
-h[:category]                                                                                                          # => "All Students"
+end
+h = {:location=>"ACADEMY 20", :category=>"All Students", :timeframe=>"2011", :dataformat=>"Percent", :data=>"0.002"}
+h[:category]
