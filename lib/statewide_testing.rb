@@ -18,7 +18,7 @@ class StatewideTesting < AllCsvFiles
   end
 
   def proficient_by_race_or_ethnicity(race_input)
-    raise UnknownDataError unless valid_races?(race_input)
+    raise UnknownDataError unless valid_races?(race_input.to_s)
     parsed_math    = send_to_parser(MATH)
     parsed_reading = send_to_parser(READING)
     parsed_writing = send_to_parser(WRITING)
@@ -27,7 +27,7 @@ class StatewideTesting < AllCsvFiles
   end
 
   def proficient_for_subject_by_grade_in_year(subject, grade, year)
-    raise UnknownDataError unless valid_subjects?(subject)
+    raise UnknownDataError unless valid_subjects?(subject.to_s)
     csv_file = get_csv_from_grade(grade)
     parsed = send_to_parser(csv_file)
     data = parsed.select { |row| row if row.fetch(:score) == subject.to_s.capitalize && row.fetch(:dataformat) == "Percent" }
@@ -36,7 +36,7 @@ class StatewideTesting < AllCsvFiles
   end
 
   def proficient_for_subject_by_race_in_year(subject, race, year)
-    raise UnknownDataError unless valid_subjects?(subject)
+    raise UnknownDataError unless valid_subjects?(subject.to_s)
     csv_file = get_csv_from_subject(subject)
     parsed = send_to_parser(csv_file)
     data = parsed.select { |row| row if row.fetch(:dataformat) == "Percent" && row.fetch(:race_ethnicity) == race.to_s.capitalize }
@@ -45,7 +45,7 @@ class StatewideTesting < AllCsvFiles
   end
 
   def proficient_for_subject_in_year(subject, year)
-    raise UnknownDataError unless valid_subjects?(subject)
+    raise UnknownDataError unless valid_subjects?(subject.to_s)
     csv_file = get_csv_from_subject(subject)
     parsed = send_to_parser(csv_file)
     data = parsed.select { |row| row if row.fetch(:dataformat) == "Percent" }
@@ -72,16 +72,16 @@ class StatewideTesting < AllCsvFiles
   end
 
   def valid_grades?(grade)
-    [3, 8]
+    [3, 8].include?(grade)
   end
 
   def valid_races?(race)
     ["asian", "black", "pacific Islander", "hispanic",
-     "native american", "two or more", "white"]
+     "native american", "two or more", "white"].include?(race)
   end
 
-  def valid_subjects?(subjects)
-    ["math", "reading", "writing"]
+  def valid_subjects?(subject)
+    ["math", "reading", "writing"].include?(subject)
   end
 
   class UnknownDataError < StandardError
