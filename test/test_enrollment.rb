@@ -1,5 +1,4 @@
 require 'district_repository'
-require 'pry'
 require 'district'
 
 class TestEnrollment < Minitest::Test
