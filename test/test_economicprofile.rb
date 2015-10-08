@@ -21,6 +21,13 @@ class TestEconomicProfile < Minitest::Test
     assert_equal expected, district.economicprofile.free_or_reduced_lunch_in_year(2010)
   end
 
+  def test_free_or_reduced_lunch_in_year_unknown_error
+    path       = File.expand_path("../data", __dir__)
+    repository = DistrictRepository.from_csv(path)
+    district   = repository.find_by_name("ACADEMY 20")
+    assert_raises (UnknownDataError::StandardError) { economicprofile.free_or_reduced_lunch_in_year(20123) }
+  end
+
   def test_school_aged_children_in_poverty_by_year
     path       = File.expand_path("../data", __dir__)
     repository = DistrictRepository.from_csv(path)
@@ -37,6 +44,13 @@ class TestEconomicProfile < Minitest::Test
     assert_equal expected, district.economicprofile.school_aged_children_in_poverty_in_year(2001)
   end
 
+  def test_school_aged_children_in_poverty_in_year_unknown_error
+    path       = File.expand_path("../data", __dir__)
+    repository = DistrictRepository.from_csv(path)
+    district   = repository.find_by_name("ACADEMY 20")
+    assert_raises (UnknownDataError::StandardError) { economicprofile.school_aged_children_in_poverty_in_year(32123) }
+  end
+
   def test_title_1_students_by_year
     path       = File.expand_path("../data", __dir__)
     repository = DistrictRepository.from_csv(path)
@@ -51,6 +65,13 @@ class TestEconomicProfile < Minitest::Test
     district   = repository.find_by_name("ACADEMY 20")
     expected   = 0.014
     assert_equal expected, district.economicprofile.title_1_students_in_year(2009)
+  end
+
+  def test_title_1_students_in_year_unknown_error
+    path       = File.expand_path("../data", __dir__)
+    repository = DistrictRepository.from_csv(path)
+    district   = repository.find_by_name("ACADEMY 20")
+    assert_raises (UnknownDataError::StandardError) { economicprofile.title_1_students_in_year(32123) }
   end
 
 end

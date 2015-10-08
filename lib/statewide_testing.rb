@@ -1,3 +1,5 @@
+require "error"
+
 class StatewideTesting < AllCsvFiles
   attr_accessor :graduation_rate_by_year
 
@@ -62,12 +64,12 @@ class StatewideTesting < AllCsvFiles
   end
 
   def get_csv_from_subject(subject)
-    if subject    == :math
-      csv_file    = MATH
+    if subject     == :math
+      csv_file     = MATH
     elsif subject  == :reading
-      csv_file    = READING
+      csv_file     = READING
     elsif subject  == :writing
-      csv_file    = WRITING
+      csv_file     = WRITING
     end
   end
 
@@ -82,10 +84,6 @@ class StatewideTesting < AllCsvFiles
 
   def valid_subjects?(subject)
     ["math", "reading", "writing"].include?(subject)
-  end
-
-  class UnknownDataError < StandardError
-    "Data Error"
   end
 
 end

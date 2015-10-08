@@ -1,5 +1,4 @@
 require 'district_repository'
-require 'pry'
 require 'district'
 require 'statewide_testing'
 
@@ -17,8 +16,7 @@ class TestStatewideTesting < Minitest::Test
     path       = File.expand_path("../data", __dir__)
     repository = DistrictRepository.from_csv(path)
     district   = repository.find_by_name("ACADEMY 20")
-    expected   = UnknownDataError
-    assert_equal expected, district.statewide_testing.proficient_by_grade(4)
+    assert_raises (UnknownDataError::StandardError) { statewide_testing.proficient_by_grade(2) }
   end
 
   def test_proficient_by_race_or_ethnicity
@@ -30,12 +28,26 @@ class TestStatewideTesting < Minitest::Test
     assert_equal expected, district.statewide_testing.proficient_by_race_or_ethnicity(:white)
   end
 
+  def test_proficient_for_race_or_ethnicity_unkown_error
+    path       = File.expand_path("../data", __dir__)
+    repository = DistrictRepository.from_csv(path)
+    district   = repository.find_by_name("ACADEMY 20")
+    assert_raises (UnknownDataError::StandardError) { statewide_testing.proficient_by_race_or_ethnicity(mexicali) }
+  end
+
   def test_proficient_for_subject_by_grade_in_year
     path       = File.expand_path("../data", __dir__)
     repository = DistrictRepository.from_csv(path)
     district   = repository.find_by_name("ACADEMY 20")
     expected   = 0.83
     assert_equal expected, district.statewide_testing.proficient_for_subject_by_grade_in_year(:math, 3, 2012)
+  end
+
+  def test_proficient_for_subject_by_grade_in_year_unkown_error
+    path       = File.expand_path("../data", __dir__)
+    repository = DistrictRepository.from_csv(path)
+    district   = repository.find_by_name("ACADEMY 20")
+    assert_raises (UnknownDataError::StandardError) { statewide_testing.proficient_for_subject_by_grade_in_year(:science, 3, 2012) }
   end
 
   def test_proficient_for_subject_by_race_in_year
@@ -46,11 +58,25 @@ class TestStatewideTesting < Minitest::Test
     assert_equal expected, district.statewide_testing.proficient_for_subject_by_race_in_year(:math, :asian, 2012)
   end
 
+  def test_proficient_for_subject_by_race_in_year_unkown_error
+    path       = File.expand_path("../data", __dir__)
+    repository = DistrictRepository.from_csv(path)
+    district   = repository.find_by_name("ACADEMY 20")
+    assert_raises (UnknownDataError::StandardError) { statewide_testing.proficient_for_subject_by_race_in_year(:history, 3, 2012) }
+  end
+
   def test_proficient_for_subject_in_year
     path       = File.expand_path("../data", __dir__)
     repository = DistrictRepository.from_csv(path)
     district   = repository.find_by_name("ACADEMY 20")
     expected   = 0.713
     assert_equal expected, district.statewide_testing.proficient_for_subject_in_year(:math, 2012)
+  end
+
+  def test_proficient_for_subject_in_year
+    path       = File.expand_path("../data", __dir__)
+    repository = DistrictRepository.from_csv(path)
+    district   = repository.find_by_name("ACADEMY 20")
+    assert_raises (UnknownDataError::StandardError) { statewide_testing.proficient_for_subject_in_year(:history, 2012) }
   end
 end
