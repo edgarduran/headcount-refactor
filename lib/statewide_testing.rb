@@ -1,4 +1,5 @@
 require "error"
+require 'pry'
 
 class StatewideTesting < AllCsvFiles
   attr_accessor :graduation_rate_by_year
@@ -16,7 +17,8 @@ class StatewideTesting < AllCsvFiles
     csv_file = get_csv_from_grade(grade)
     parsed = send_to_parser(csv_file)
     data = parsed.select { |row| row if row.fetch(:dataformat) == "Percent" }
-    time = data.map { |row| [row.fetch(:timeframe).to_i, (row.fetch(:data).to_f * 1000).to_i/ 1000.0] }.to_h
+    good_data = data.reject {|row| row.has_value?("LNE") || row.has_value?("#VALUE!") || row.has_value?("N/A") || row.has_value?(nil)}
+    time = good_data.map { |row| [row.fetch(:timeframe).to_i, (row.fetch(:data).to_f * 1000).to_i/ 1000.0] }.to_h
   end
 
   def proficient_by_race_or_ethnicity(race_input)

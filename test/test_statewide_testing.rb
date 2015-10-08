@@ -12,6 +12,14 @@ class TestStatewideTesting < Minitest::Test
     assert_equal expected, district.statewide_testing.proficient_by_grade(3)
   end
 
+  def test_proficient_by_grade
+    path       = File.expand_path("../data", __dir__)
+    repository = DistrictRepository.from_csv(path)
+    district   = repository.find_by_name("AGATE 300")
+    expected   = {2008=>0.278, 2009=>0.29}
+    assert_equal expected, district.statewide_testing.proficient_by_grade(3)
+  end
+
   def test_proficient_by_grade_unknown_error
     path       = File.expand_path("../data", __dir__)
     repository = DistrictRepository.from_csv(path)
