@@ -163,3 +163,6 @@ class TestEnrollment < Minitest::Test
   end
 
 end
+
+h = {:location=>"ACADEMY 20", :category=>"All Students", :timeframe=>"2011", :dataformat=>"Percent", :data=>"0.002"}
+h[:category]

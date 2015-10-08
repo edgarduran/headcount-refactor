@@ -61,28 +61,11 @@ class Enrollment < AllCsvFiles
     end
     csv_file = DROPOUT
     parsed = send_to_parser(csv_file)
-    line = {}
-    hash = {}
-    parsed.each do |columns|
-      district  = columns[:location]
-      category  = columns[:category]
-      year      = columns[:timeframe]
-      stat_type = columns[:dataformat]
-      value     = columns[:data]
-      if district == "ACADEMY 20"
-        if year == year_input.to_s && category == "Female Students" || year == year_input.to_s && category == "Male Students"
-          if category == "Female Students"
-            category = category[0..5].downcase
-          elsif
-            category == "Male Students"
-            category = category [0..3].downcase
-          end
-          hash = Hash[category.to_sym, (value.to_f * 1000).to_i / 1000.0]
-          line = line.merge(hash)
-        end
-      end
-    end
-    return line
+    m_f_rows = parsed.select { |row| row if row.fetch(:location) == @name &&
+                                            row.fetch(:timeframe).to_i == year_input &&
+                                            (row.fetch(:category) == "Male Students" ||
+                                            row.fetch(:category) == "Female Students")}
+    hash =  m_f_rows.map { |row| [row.fetch(:category).downcase.split[0].to_sym, (row.fetch(:data).to_f * 1000).to_i/ 1000.0] }.to_h
   end
 
   def dropout_rate_by_race_in_year(year_input)
@@ -131,11 +114,9 @@ class Enrollment < AllCsvFiles
 
 
   def dropout_rate_for_race_or_ethnicity(race)
-
   end
 
   def dropout_rate_for_race_or_ethnicity_in_year(race, year_input)
-
   end
 
 
