@@ -56,7 +56,7 @@ class TestEnrollment < Minitest::Test
     assert_equal nil, district.enrollment.graduation_rate_in_year(232323322332)
   end
 
-  def test_returns_a_hash_of_years_to_truncated_kindergarten_participation_percentages
+  def test_kindergarten_participation_by_year
     path       = File.expand_path("../data", __dir__)
     repository = DistrictRepository.from_csv(path)
     district   = repository.find_by_name("Colorado")
@@ -66,19 +66,100 @@ class TestEnrollment < Minitest::Test
     assert_equal expected, district.enrollment.kindergarten_participation_by_year
   end
 
-  def test_unknown_years_return_nil
+  def test_unknown_years_return_nil_for_kinder
     path       = File.expand_path("../data", __dir__)
     repository = DistrictRepository.from_csv(path)
     district   = repository.find_by_name("ACADEMY 20")
     assert_equal nil, district.enrollment.kindergarten_participation_in_year(232323322332)
   end
 
-  def kindergarten_participation_in_year
+  def test_kindergarten_participation_in_year
     path       = File.expand_path("../data", __dir__)
     repository = DistrictRepository.from_csv(path)
     district   = repository.find_by_name("Colorado")
-    binding.pry 
-    assert_equal 0.436, district.enrollment.kindergarten_participation_in_year(2010)
+    assert_equal 0.64, district.enrollment.kindergarten_participation_in_year(2010)
+  end
+
+  def test_unknown_years_return_nil_online
+    path       = File.expand_path("../data", __dir__)
+    repository = DistrictRepository.from_csv(path)
+    district   = repository.find_by_name("ACADEMY 20")
+    assert_equal nil, district.enrollment.online_participation_in_year(232323322332)
+  end
+
+  def test_online_participation_in_year
+    path       = File.expand_path("../data", __dir__)
+    repository = DistrictRepository.from_csv(path)
+    district   = repository.find_by_name("ACADEMY 20")
+    assert_equal 341, district.enrollment.online_participation_in_year(2013)
+  end
+
+  def test_participation
+    path       = File.expand_path("../data", __dir__)
+    repository = DistrictRepository.from_csv(path)
+    district   = repository.find_by_name("ACADEMY 20")
+    expected = {2009=>22620, 2010=>23119, 2011=>23657, 2012=>23973, 2013=>24481, 2014=>24578}
+    assert_equal expected, district.enrollment.participation_by_year
+  end
+
+  def test_unknown_years_return_nil_participate
+    path       = File.expand_path("../data", __dir__)
+    repository = DistrictRepository.from_csv(path)
+    district   = repository.find_by_name("ACADEMY 20")
+    assert_equal nil, district.enrollment.participation_in_year(232323322332)
+  end
+
+  def test_participation_in_year
+    path       = File.expand_path("../data", __dir__)
+    repository = DistrictRepository.from_csv(path)
+    district   = repository.find_by_name("ACADEMY 20")
+    assert_equal 22620, district.enrollment.participation_in_year(2009)
+  end
+
+  def test_special_education_by_year
+    path       = File.expand_path("../data", __dir__)
+    repository = DistrictRepository.from_csv(path)
+    district   = repository.find_by_name("ACADEMY 20")
+    expected = { 2009 => 0.075, 2010 => 0.078, 2011 => 0.079, 2012 => 0.078,
+                 2013 => 0.079, 2014 => 0.079}
+    assert_equal expected, district.enrollment.special_education_by_year
+  end
+
+
+  def test_unknown_years_return_nil_special_ed_year
+    path       = File.expand_path("../data", __dir__)
+    repository = DistrictRepository.from_csv(path)
+    district   = repository.find_by_name("ACADEMY 20")
+    assert_equal nil, district.enrollment.special_education_in_year(232323322332)
+  end
+
+  def test_special_ed_in_year
+    path       = File.expand_path("../data", __dir__)
+    repository = DistrictRepository.from_csv(path)
+    district   = repository.find_by_name("ACADEMY 20")
+    assert_equal 0.079, district.enrollment.special_education_in_year(2013)
+  end
+
+  def test_remediation_by_year
+    path       = File.expand_path("../data", __dir__)
+    repository = DistrictRepository.from_csv(path)
+    district   = repository.find_by_name("ACADEMY 20")
+    expected = { 2009 => 0.264, 2010 => 0.294, 2011 => 0.263,}
+    assert_equal expected, district.enrollment.remediation_by_year
+  end
+
+  def test_unknown_years_return_nil_remediation
+    path       = File.expand_path("../data", __dir__)
+    repository = DistrictRepository.from_csv(path)
+    district   = repository.find_by_name("ACADEMY 20")
+    assert_equal nil, district.enrollment.remediation_in_year(232323322332)
+  end
+
+  def test_remediation_in_year
+    path       = File.expand_path("../data", __dir__)
+    repository = DistrictRepository.from_csv(path)
+    district   = repository.find_by_name("ACADEMY 20")
+    assert_equal 0.294, district.enrollment.remediation_in_year(2010)
   end
 
 end

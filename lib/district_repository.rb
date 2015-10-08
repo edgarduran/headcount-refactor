@@ -167,4 +167,69 @@ class Enrollment < AllCsvFiles
     time.fetch(year_input)
   end
 
+  def online_participation_by_year
+    csv_file = ONLINE_ENROLL
+    parsed = send_to_parser(csv_file)
+    parsed.map { |row| [row.fetch(:timeframe).to_i, (row.fetch(:data).to_f * 1000).to_i/ 1000.0] }.to_h
+  end
+
+  def online_participation_in_year(year_input)
+    if year_input.to_s.length != 4
+      return nil
+    end
+    time = online_participation_by_year
+    time.fetch(year_input)
+  end
+
+  def participation_by_year
+    csv_file = ENROLLMENT
+    parsed = send_to_parser(csv_file)
+    parsed.map { |row| [row.fetch(:timeframe).to_i, (row.fetch(:data).to_f * 1000).to_i/ 1000.0] }.to_h
+  end
+
+  def participation_in_year(year_input)
+    if year_input.to_s.length != 4
+      return nil
+    end
+    time = participation_by_year
+    time.fetch(year_input)
+  end
+
+  def participation_by_race_or_ethnicity(race_input)
+
+  end
+
+  def participation_by_race_or_ethnicity_in_year(year_input)
+
+  end
+
+  def special_education_by_year
+    csv_file = SPECIAL_ED
+    parsed = send_to_parser(csv_file)
+    parsed.map { |row| [row.fetch(:timeframe).to_i, (row.fetch(:data).to_f * 1000).to_i/ 1000.0] }.to_h
+  end
+
+  def special_education_in_year(year_input)
+    if year_input.to_s.length != 4
+      return nil
+    end
+    time = special_education_by_year
+    time.fetch(year_input)
+  end
+
+  def remediation_by_year
+    csv_file = REMEDIATION
+    parsed = send_to_parser(csv_file)
+    parsed.map { |row| [row.fetch(:timeframe).to_i, (row.fetch(:data).to_f * 1000).to_i/ 1000.0] }.to_h
+  end
+
+  def remediation_in_year(year_input)
+    if year_input.to_s.length != 4
+      return nil
+    end
+    time = remediation_by_year
+    time.fetch(year_input)
+  end
+
+
 end
