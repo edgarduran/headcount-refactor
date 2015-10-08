@@ -11,4 +11,8 @@ class District
   def economicprofile
     EconomicProfile.new(@name)
   end
+
+  def statewide_testing
+    StatewideTesting.new(@name)
+  end
 end
