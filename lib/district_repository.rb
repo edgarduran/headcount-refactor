@@ -16,6 +16,11 @@ class DistrictRepository
 
   def initialize(district_data)
     @district_data = district_data
+    @districts = {}
+    @district_data.each do |name, data|
+      @districts[name] = District.new(name, @district_data.fetch(name.upcase))
+
+    end
   end
 
   def find_by_name(name)
@@ -23,14 +28,15 @@ class DistrictRepository
       return nil
     end
     name = name.upcase
-    District.new(name, @district_data.fetch(name.upcase))
+    @districts[name]
   end
 
-  def find_all_matching(name)
-  @district_data.select{|dist, val|
-    if dist.include?(name.upcase)
-      val
+  def find_all_matching(name_fragment)
+    matching = []
+    district_names = @districts.keys
+    district_names.each do |name|
+      matching << @districts[name] if name.include?(name_fragment.upcase)
     end
-  }.values.to_a
-end
+    matching
+  end
 end

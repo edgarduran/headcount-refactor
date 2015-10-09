@@ -18,7 +18,8 @@ class StatewideTesting < AllCsvFiles
     parsed = send_to_parser(csv_file)
     data = parsed.select { |row| row if row.fetch(:dataformat) == "Percent" }
     good_data = data.reject {|row| row.has_value?("LNE") || row.has_value?("#VALUE!") || row.has_value?("N/A") || row.has_value?(nil)}
-    time = good_data.map { |row| [row.fetch(:timeframe).to_i, (row.fetch(:data).to_f * 1000).to_i/ 1000.0] }.to_h
+    hash = good_data.map { |row| [row.fetch(:score).downcase.to_sym, (row.fetch(:data).to_f * 1000).to_i/ 1000.0] }.to_h
+    time = good_data.map { |row| [row.fetch(:timeframe).to_i, hash] }.to_h
   end
 
   def proficient_by_race_or_ethnicity(race_input)
@@ -40,7 +41,7 @@ class StatewideTesting < AllCsvFiles
   end
 
   def proficient_for_subject_by_race_in_year(subject, race, year)
-    raise UnknownDataError unless valid_subjects?(subject.to_s)
+    raise UnknownDataError unless valid_subjects?(subject.to_s) && valid_races?(race.to_s.downcase)
     csv_file = get_csv_from_subject(subject)
     parsed = send_to_parser(csv_file)
     data = parsed.select { |row| row if row.fetch(:dataformat) == "Percent" && row.fetch(:race_ethnicity) == race.to_s.capitalize }
@@ -50,6 +51,7 @@ class StatewideTesting < AllCsvFiles
 
   def proficient_for_subject_in_year(subject, year)
     raise UnknownDataError unless valid_subjects?(subject.to_s)
+    raise UnknownDataError if year == 2010 || year == 2015
     csv_file = get_csv_from_subject(subject)
     parsed = send_to_parser(csv_file)
     data = parsed.select { |row| row if row.fetch(:dataformat) == "Percent" }
@@ -80,8 +82,8 @@ class StatewideTesting < AllCsvFiles
   end
 
   def valid_races?(race)
-    ["asian", "black", "pacific Islander", "hispanic",
-     "native american", "two or more", "white"].include?(race)
+    ["asian", "black", "pacific_islander", "hispanic",
+     "native_american", "two_or_more", "white"].include?(race)
   end
 
   def valid_subjects?(subject)

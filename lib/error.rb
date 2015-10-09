@@ -3,3 +3,7 @@ class UnknownDataError < StandardError
     "data issues"
   end
 end
+
+class UnknownRaceError < StandardError
+  
+end

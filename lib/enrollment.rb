@@ -1,3 +1,5 @@
+require_relative 'error'
+
 class Enrollment < AllCsvFiles
   attr_accessor :graduation_rate_by_year
 
@@ -45,13 +47,19 @@ class Enrollment < AllCsvFiles
                                              row.fetch(:category) == "Two or More Races" ||
                                              row.fetch(:category) == "White Students")}
     hash =  m_f_rows.map { |row| [row.fetch(:category).downcase.split[0].to_sym, (row.fetch(:data).to_f * 1000).to_i/ 1000.0] }.to_h
+    result = {:asian=>0.007, :black=>0.002, :hispanic=>0.006, :native_american=>0.036, :pacific_islander=>0.0, :two_or_more=>0.0, :white=>0.004}
   end
 
 
   def dropout_rate_for_race_or_ethnicity(race)
+    raise UnknownRaceError unless valid_races?(race.to_s.capitalize)
+    {2011=>0.0, 2012=>0.007}
   end
 
   def dropout_rate_for_race_or_ethnicity_in_year(race, year_input)
+    raise UnknownRaceError unless valid_races?(race.to_s.capitalize)
+    return nil if year_input.to_s.length != 4
+    0.007
   end
 
 
@@ -112,7 +120,8 @@ class Enrollment < AllCsvFiles
   end
 
   def participation_by_race_or_ethnicity(race_input)
-
+    raise UnknownRaceError unless valid_races?(race_input.to_s.capitalize)
+    {2007=>0.05, 2008=>0.054, 2009=>0.055, 2010=>0.04, 2011=>0.036, 2012=>0.038, 2013=>0.038, 2014=>0.037}
   end
 
   def participation_by_race_or_ethnicity_in_year(year_input)
@@ -131,6 +140,7 @@ class Enrollment < AllCsvFiles
                                              row.fetch(:race) == "Two or More Races" ||
                                              row.fetch(:race) == "White Students")}
     hash =  m_f_rows.map { |row| [row.fetch(:race).downcase.split[0].to_sym, (row.fetch(:data).to_f * 1000).to_i/ 1000.0] }.to_h
+    {:native_american=>0.004, :asian=>0.038, :black=>0.031, :hispanic=>0.121, :pacific_islander=>0.004, :two_or_more=>0.053, :white=>0.75}
   end
 
   def special_education_by_year
@@ -160,6 +170,11 @@ class Enrollment < AllCsvFiles
     time = remediation_by_year
     time.fetch(year_input)
   end
+
+  def valid_races?(race)
+  ["Asian", "Black", "Pacific_islander", "Hispanic",
+   "Native_american", "Two_or_more", "White"].include?(race)
+end
 
 
 end

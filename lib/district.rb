@@ -4,8 +4,9 @@ require_relative 'enrollment'
 
 class District
   attr_accessor :name
+
   def initialize(name, data)
-    @name = name
+    @name = name.upcase
     @data = data
   end
 

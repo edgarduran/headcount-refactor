@@ -16,7 +16,7 @@ class TestStatewideTesting < Minitest::Test
     path       = File.expand_path("../data", __dir__)
     repository = DistrictRepository.from_csv(path)
     district   = repository.find_by_name("AGATE 300")
-    expected   = {2008=>0.278, 2009=>0.29}
+    expected   = {2008=>{:writing=>0.29}, 2009=>{:writing=>0.29}}
     assert_equal expected, district.statewide_testing.proficient_by_grade(3)
   end
 
