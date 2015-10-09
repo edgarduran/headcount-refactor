@@ -1,4 +1,9 @@
+require_relative 'economic_profile'
+require_relative 'statewide_testing'
+require_relative 'enrollment'
+
 class District
+  attr_accessor :name
   def initialize(name, data)
     @name = name
     @data = data
@@ -8,7 +13,7 @@ class District
     Enrollment.new(@name)
   end
 
-  def economicprofile
+  def economic_profile
     EconomicProfile.new(@name)
   end
 

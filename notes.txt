@@ -1,0 +1,1 @@
+economic_profile was originally named economicprofile.rb, so mightbreak shit with our tests we need to go through and make corrections

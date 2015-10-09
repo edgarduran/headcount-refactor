@@ -2,6 +2,7 @@ require 'csv'
 require 'pry'
 require_relative 'all_csv_files'
 require_relative 'parser'
+require_relative 'district'
 
 class DistrictRepository
   def self.from_csv(path)
@@ -19,7 +20,18 @@ class DistrictRepository
   end
 
   def find_by_name(name)
+    if @district_data.keys.include?(name.upcase) == false
+      return nil
+    end
     name = name.upcase
-    District.new(name, @district_data.fetch(name))
+    District.new(name, @district_data.fetch(name.upcase))
   end
+
+  def find_all_matching(name)
+  @district_data.select{|dist, val|
+    if dist.include?(name.upcase)
+      val
+    end
+  }.values.to_a
+end
 end

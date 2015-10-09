@@ -18,6 +18,9 @@ class EconomicProfile < AllCsvFiles
   end
 
   def free_or_reduced_lunch_in_year(year)
+    if year.to_s.length > 4
+      return nil
+    end
     free_or_reduced_lunch_by_year.fetch(year)
   end
 
@@ -29,6 +32,9 @@ class EconomicProfile < AllCsvFiles
   end
 
   def school_aged_children_in_poverty_in_year(year)
+    if year.to_s.length > 4
+      return nil
+    end
     school_aged_children_in_poverty_by_year.fetch(year)
   end
 
@@ -40,6 +46,9 @@ class EconomicProfile < AllCsvFiles
   end
 
   def title_1_students_in_year(year)
+    if year.to_s.length > 4
+      return nil
+    end
     title_1_students_by_year.fetch(year)
   end
 

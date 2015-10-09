@@ -123,14 +123,14 @@ class Enrollment < AllCsvFiles
     parsed = send_to_parser(csv_file)
     m_f_rows = parsed.select { |row| row if row.fetch(:location) == @name &&
                                             row.fetch(:timeframe).to_i == year_input &&
-                                            (row.fetch(:category) == "Asian Students" ||
-                                             row.fetch(:category) == "Black Students" ||
-                                             row.fetch(:category) == "Native Hawaiian or Other Pacific Islander" ||
-                                             row.fetch(:category) == "Hispanic Students" ||
-                                             row.fetch(:category) == "Native American Students" ||
-                                             row.fetch(:category) == "Two or More Races" ||
-                                             row.fetch(:category) == "White Students")}
-    hash =  m_f_rows.map { |row| [row.fetch(:category).downcase.split[0].to_sym, (row.fetch(:data).to_f * 1000).to_i/ 1000.0] }.to_h
+                                            (row.fetch(:race) == "Asian Students" ||
+                                             row.fetch(:race) == "Black Students" ||
+                                             row.fetch(:race) == "Native Hawaiian or Other Pacific Islander" ||
+                                             row.fetch(:race) == "Hispanic Students" ||
+                                             row.fetch(:race) == "Native American Students" ||
+                                             row.fetch(:race) == "Two or More Races" ||
+                                             row.fetch(:race) == "White Students")}
+    hash =  m_f_rows.map { |row| [row.fetch(:race).downcase.split[0].to_sym, (row.fetch(:data).to_f * 1000).to_i/ 1000.0] }.to_h
   end
 
   def special_education_by_year
